@@ -142,6 +142,8 @@ var optionalObj = {'fileName': 'matricula', 'type':'png'};
 io.on('connection', function (socket) {
     socket.on('image', function (data) {
         base64ToImage(data.src,path,optionalObj);
+        console.log("Processant matricula...");
+        socket.emit('processant');
         cmd.get(
             'curl -X POST -F image=@matricula.png "https://api.openalpr.com/v2/recognize?recognize_vehicle=1&country=eu&secret_key=sk_482e5e15d9d326b4c05421c9"',
             function(err, data, stderr) {

@@ -108,6 +108,9 @@
             socket.on('matricula', function (data) {
               document.getElementById('matricula').innerHTML = "<h1>"+data.matricula+"</h1><br/><h2>"+data.autoritzat+"</h2>"
             });
+            socket.on('processant', function (data) {
+              document.getElementById('matricula').innerText = "Processant matrícula..."
+            });
 
           });
                       
