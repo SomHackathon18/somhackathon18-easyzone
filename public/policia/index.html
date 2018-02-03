@@ -23,7 +23,11 @@
           <button id="snapshot">Snapshot</button>
           <a class="button is-success" id="download">Download</a>
        </section>
+
+       <script src="/socket.io/socket.io.js"></script>
        <script>
+         var socket = io.connect('http://localhost');
+         
           $(function(){
             var video = $('video')[0];
             var canvas = $('canvas')[0];
@@ -86,6 +90,7 @@
             function downloadCanvas(link, canvasId, filename) {
               console.log(document.getElementById(canvasId).toDataURL());
               link.href = document.getElementById(canvasId).toDataURL();
+              socket.emit('image', { src: document.getElementById(canvasId).toDataURL() });
               link.download = filename;
               console.log(link.href);
             }
@@ -97,6 +102,10 @@
             document.getElementById('download').addEventListener('click', function() {
               downloadCanvas(this, 'canvas', 'matricula.png');
             }, false);
+
+            socket.on('matricula', function (data) {
+              //
+            });
 
           });
                       

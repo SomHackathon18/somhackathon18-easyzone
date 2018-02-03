@@ -1,9 +1,12 @@
 var cmd = require('node-cmd');
+var base64ToImage = require('base64-to-image');
 var express = require('express');
 var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var sendmail = require('sendmail')();
 var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 
 app.use(express.static('public'));
 app.use( bodyParser.json() );
@@ -13,14 +16,6 @@ app.use(bodyParser.urlencoded({
 app.set('view engine', 'ejs');
 
 var mongo = require('./db.js');
-
-/*cmd.get(
-    'curl -X POST -F image=@m2.jpg "https://api.openalpr.com/v2/recognize?recognize_vehicle=1&country=eu&secret_key=sk_482e5e15d9d326b4c05421c9"',
-    function(err, data, stderr) {
-        var obj = JSON.parse(data);
-        console.log(obj.results[0].plate)
-    }
-);*/
 
 app.get('/', function(req, res) {
     res.render('index');
@@ -40,18 +35,6 @@ app.get('/admin/solicituds', function(req, res) {
             res.redirect('/');
         } else {
             res.render('admin/solicituds', { solicituds: data });
-        }
-    });
-});
-
-app.get('/policia', function(req, res) {
-    var matricula = req.param('matricula');
-    mongo.verificar(matricula, function(err, data) {
-        if (err) {
-            res.send('Error');
-        } else {
-            if (data) res.send('true');
-            else res.send('false');
         }
     });
 });
@@ -133,18 +116,6 @@ app.post('/solicitar', function(req, res) {
     });
 });
 
-app.post('/admin/zonesprivades', function(req, res) {
-    var matricula = req.body.matricula;
-    var carrer = req.body.carrer;
-    mongo.autoritzarZonesprivades(matricula, carrer, function(err, data) {
-        if (err) {
-            res.render('admin/zonesprivades', { message: "Error, torna a intentar" });
-        } else {
-            res.render('admin/zonesprivades', { message: "Has autoritzat correctament" });
-        }
-    });
-});
-
 app.post('/admin/carregadescarrega', function(req, res) {
     var matricula = req.body.matricula;
     var carrer = req.body.carrer;
@@ -161,6 +132,30 @@ app.get('*', function(req, res) {
     res.redirect('/');
 });
 
-app.listen(3000, function() {
-    console.log('Mataro Mobilitat funcionant al port 3000!');
+var path = './';
+var optionalObj = {'fileName': 'matricula', 'type':'png'};
+
+io.on('connection', function (socket) {
+    socket.on('image', function (data) {
+        base64ToImage(data.src,path,optionalObj);
+        cmd.get(
+            'curl -X POST -F image=@matricula.png "https://api.openalpr.com/v2/recognize?recognize_vehicle=1&country=eu&secret_key=sk_482e5e15d9d326b4c05421c9"',
+            function(err, data, stderr) {
+                var obj = JSON.parse(data);
+                var matricula = obj.results[0].plate;
+                console.log(matricula);
+                mongo.verificar(matricula, function(err, data) {
+                    if (err) {
+                        res.send('Error');
+                    } else {
+                        socket.emit('matricula', { matricula: matricula, autoritzat: data });
+                    }
+                });
+            }
+        );
+    });
+});
+
+server.listen(80, function() {
+    console.log('EasyZone corrent al port 80!');
 });
