@@ -2,6 +2,7 @@ var cmd = require('node-cmd');
 var express = require('express');
 var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
+var sendmail = require('sendmail')();
 var app = express();
 
 app.use(express.static('public'));
@@ -29,26 +30,93 @@ app.get('/admin', function(req, res) {
     res.render('admin/admin', { message: null });
 });
 
-app.get('/aparcar', function(req, res) {
-    res.render('aparcar', { message: null });
+app.get('/solicitar', function(req, res) {
+    res.render('solicitar', { message: null });
+});
+
+app.get('/admin/solicituds', function(req, res) {
+    mongo.solicituds(function(err, data) {
+        if (err) {
+            res.redirect('/');
+        } else {
+            res.render('admin/solicituds', { solicituds: data });
+        }
+    });
+});
+
+app.get('/policia', function(req, res) {
+    var matricula = req.param('matricula');
+    mongo.verificar(matricula, function(err, data) {
+        if (err) {
+            res.send('Error');
+        } else {
+            if (data) res.send('true');
+            else res.send('false');
+        }
+    });
+});
+
+app.get('/admin/acceptar', function(req, res) {
+    var correu = req.param('correu');
+    var dni = req.param('dni');
+    var matricula = req.param('matricula');
+    mongo.acceptar(dni, matricula, function(err, data) {
+        if (err) {
+            res.redirect('/');
+        } else {
+            sendmail({
+                from: 'no-reply@yourdomain.com',
+                to: correu,
+                subject: 'Resultat acreditació Zona Blava',
+                html: 'Has estat acceptat!',
+            }, function(err, reply) {
+                console.log(err && err.stack);
+                console.dir(reply);
+                res.redirect('/admin/solicituds');
+            });
+        }
+    });
+});
+
+app.get('/admin/denegar', function(req, res) {
+    var dni = req.param('dni');
+    var matricula = req.param('matricula');
+    mongo.denegar(dni, matricula, function(err, data) {
+        if (err) {
+            res.redirect('/');
+        } else {
+            res.redirect('/admin/solicituds');
+        }
+    });
 });
 
 app.get('/admin/zonesprivades', function(req, res) {
     res.render('admin/zonesprivades', { message: null });
 });
 
-app.get('/admin/aparcaments', function(req, res) {
-    mongo.aparcaments(function(err, data) {
-        if (err) {
-            res.redirect('/');
-        } else {
-            res.render('admin/aparcaments', { aparcaments: data });
-        }
-    });
-});
-
 app.get('/admin/carregadescarrega', function(req, res) {
     res.render('admin/carregadescarrega', { message: null });
+});
+
+app.post('/solicitar', function(req, res) {
+    var dni = req.body.dni;
+    var matricula = req.body.matricula;
+    var correu = req.body.correu;
+    mongo.buscar(dni, matricula, function(err, data) {
+        if (err) {
+            res.render('solicitar', { message: "Error, torna a intentar" });
+        } else if (data !== null) {
+            res.render('solicitar', { message: "Ja hi ha una solicitud amb aquest dni i matrícula en curs" });
+        } else {
+            mongo.solicitar(dni, matricula, correu, function(err, data) {
+                if (err) {
+                    res.render('solicitar', { message: "Error, torna a intentar" });
+                } else {
+                    res.render('solicitar', { message: "Has solicitat correctament, revisa el teu correu" });
+                }
+            });
+        }
+    });
 });
 
 app.post('/admin/zonesprivades', function(req, res) {
@@ -71,20 +139,6 @@ app.post('/admin/carregadescarrega', function(req, res) {
             res.render('admin/carregadescarrega', { message: "Error, torna a intentar" });
         } else {
             res.render('admin/carregadescarrega', { message: "Has autoritzat correctament" });
-        }
-    });
-});
-
-app.post('/aparcar', function(req, res) {
-    var matricula = req.body.matricula;
-    var carrer = req.body.carrer;
-    var horaFi = req.body.horafi;
-    var socVei = req.body.socvei;
-    mongo.reservarParking(matricula, carrer, horaFi, socVei, function(err, data) {
-        if (err) {
-            res.render('aparcar', { message: "Error, torna a intentar" });
-        } else {
-            res.render('aparcar', { message: "Has aparcat correctament" });
         }
     });
 });
