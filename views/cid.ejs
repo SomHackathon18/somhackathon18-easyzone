@@ -78,7 +78,13 @@
     document.getElementById("modalTitle").innerText = "Reservar zona " + cidId;
   }
 
-  function closeModal(){
+  function closeModal(){    
+    cidId = null;
+    modal.className = "modal";
+    mapView.style.display = "";
+  }
+
+  function reserveZone(){
     var circle = "circle"+cidId;
     occupyZone(circle);
     cidId = null;
@@ -92,6 +98,10 @@
   }
   
   document.getElementById("reservar").addEventListener("click", function(){
+    reserveZone();
+  });
+
+  document.getElementById("closeModal").addEventListener("click", function(){
     closeModal();
   });
 
