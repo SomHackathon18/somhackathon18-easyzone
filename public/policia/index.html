@@ -19,9 +19,11 @@
                 </div>
              </div>
           </div>
+          <div id="matricula"></div>
+          <a class="button is-danger" id="snapshot">Fer foto</a>
+          <br/>
           <canvas id = "canvas" width="300" height="300"></canvas>
-          <button id="snapshot">Snapshot</button>
-          <a class="button is-success" id="download">Download</a>
+          <a class="button is-success" id="download">Verificar</a>
        </section>
 
        <script src="/socket.io/socket.io.js"></script>
@@ -88,11 +90,11 @@
             };
 
             function downloadCanvas(link, canvasId, filename) {
-              console.log(document.getElementById(canvasId).toDataURL());
-              link.href = document.getElementById(canvasId).toDataURL();
               socket.emit('image', { src: document.getElementById(canvasId).toDataURL() });
+              /*console.log(document.getElementById(canvasId).toDataURL());
+              link.href = document.getElementById(canvasId).toDataURL();
               link.download = filename;
-              console.log(link.href);
+              console.log(link.href);*/
             }
 
             /** 
@@ -104,7 +106,7 @@
             }, false);
 
             socket.on('matricula', function (data) {
-              //
+              document.getElementById('matricula').innerHTML = "<h1>"+data.matricula+"</h1><br/><h2>"+data.autoritzat+"</h2>"
             });
 
           });

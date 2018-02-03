@@ -152,7 +152,9 @@ io.on('connection', function (socket) {
                     if (err) {
                         res.send('Error');
                     } else {
-                        socket.emit('matricula', { matricula: matricula, autoritzat: data });
+                        var aut = "Resident de la zona";
+                        if (data === null) aut = "MULTAAAA!!!";
+                        socket.emit('matricula', { matricula: matricula, autoritzat: aut });
                     }
                 });
             }
