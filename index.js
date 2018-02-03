@@ -65,13 +65,11 @@ app.get('/admin/acceptar', function(req, res) {
             res.redirect('/');
         } else {
             sendmail({
-                from: 'no-reply@yourdomain.com',
+                from: 'no-reply@easyzone.com',
                 to: correu,
                 subject: 'Resultat acreditació Zona Blava',
                 html: 'Has estat acceptat!',
             }, function(err, reply) {
-                console.log(err && err.stack);
-                console.dir(reply);
                 res.redirect('/admin/solicituds');
             });
         }
@@ -85,7 +83,14 @@ app.get('/admin/denegar', function(req, res) {
         if (err) {
             res.redirect('/');
         } else {
-            res.redirect('/admin/solicituds');
+            sendmail({
+                from: 'no-reply@easyzone.com',
+                to: correu,
+                subject: 'Resultat acreditació Zona Blava',
+                html: 'Has estat denegat!',
+            }, function(err, reply) {
+                res.redirect('/admin/solicituds');
+            });
         }
     });
 });
@@ -102,17 +107,25 @@ app.post('/solicitar', function(req, res) {
     var dni = req.body.dni;
     var matricula = req.body.matricula;
     var correu = req.body.correu;
-    mongo.buscar(dni, matricula, function(err, data) {
+    mongo.buscarMataro(dni, matricula, function(err, resultat) {
         if (err) {
             res.render('solicitar', { message: "Error, torna a intentar" });
-        } else if (data !== null) {
-            res.render('solicitar', { message: "Ja hi ha una solicitud amb aquest dni i matrícula en curs" });
+        } else if (resultat === null) {
+            res.render('solicitar', { message: "No ets elegible per ser acreditat a la zona blava" });
         } else {
-            mongo.solicitar(dni, matricula, correu, function(err, data) {
+            mongo.buscar(dni, matricula, function(err, data) {
                 if (err) {
                     res.render('solicitar', { message: "Error, torna a intentar" });
+                } else if (data !== null) {
+                    res.render('solicitar', { message: "Ja hi ha una solicitud amb aquest dni i matrícula en curs" });
                 } else {
-                    res.render('solicitar', { message: "Has solicitat correctament, revisa el teu correu" });
+                    mongo.solicitar(dni, matricula, correu, function(err, data) {
+                        if (err) {
+                            res.render('solicitar', { message: "Error, torna a intentar" });
+                        } else {
+                            res.render('solicitar', { message: "Has solicitat correctament, revisa el teu correu" });
+                        }
+                    });
                 }
             });
         }
