@@ -148,25 +148,29 @@ io.on('connection', function (socket) {
             'curl -X POST -F image=@matricula.png "https://api.openalpr.com/v2/recognize?recognize_vehicle=1&country=eu&secret_key=sk_482e5e15d9d326b4c05421c9"',
             function(err, data, stderr) {
                 var obj = JSON.parse(data);
-                var matricula = obj.results[0].plate;
-                console.log(matricula);
-                mongo.robat(matricula, function(err, rob) {
-                    if (err) {
-                        res.send('Error');
-                    } else {
-                        mongo.verificar(matricula, function(err, data) {
-                            if (err) {
-                                res.send('Error');
-                            } else if (rob) {
-                                socket.emit('matricula', { matricula: matricula, autoritzat: "Aquest vehícle apareix com a robat" });
-                            } else {
-                                var aut = "Aquest vehícle es d'un resident de la zona";
-                                if (data === null) aut = "Aquest vehícle no te autorització per aparcar aquí";
-                                socket.emit('matricula', { matricula: matricula, autoritzat: aut });
-                            }
-                        });
-                    }
-                });
+                if (obj.lenght != 0) {
+                    var matricula = obj.results[0].plate;
+                    console.log(matricula);
+                    mongo.robat(matricula, function(err, rob) {
+                        if (err) {
+                            socket.emit('matricula', { matricula: matricula, autoritzat: "Hi ha hagut un error, torna a verificar" });
+                        } else {
+                            mongo.verificar(matricula, function(err, data) {
+                                if (err) {
+                                    socket.emit('matricula', { matricula: matricula, autoritzat: "Hi ha hagut un error, torna a verificar" });
+                                } else if (rob) {
+                                    socket.emit('matricula', { matricula: matricula, autoritzat: "Aquest vehícle apareix com a robat" });
+                                } else {
+                                    var aut = "Aquest vehícle es d'un resident de la zona";
+                                    if (data === null) aut = "Aquest vehícle no te autorització per aparcar aquí";
+                                    socket.emit('matricula', { matricula: matricula, autoritzat: aut });
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    socket.emit('matricula', { matricula: matricula, autoritzat: "Hi ha hagut un error, torna a verificar" });
+                }
             }
         );
     });
