@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Camera + Snapshot Demo</title>
+  
+  
+  
+  
+  
+</head>
+
+<body>
+
+  <div class="video-container">
+  <video id="video" width="250" autoplay></video>
+  <canvas id = "canvas"></canvas>
+</div>
+
+<button id="snapshot">Snapshot</button>
+<a id="download">Download</a>
+
+<script>
+function downloadCanvas(link, canvasId, filename) {
+  
+    link.href = document.getElementById(canvasId).toDataURL();
+    link.download = "test.png";
+    console.log(link.href);
+}
+
+/** 
+ * The event handler for the link's onclick event. We give THIS as a
+ * parameter (=the link element), ID of the canvas and a filename.
+*/
+document.getElementById('download').addEventListener('click', function() {
+    downloadCanvas(this, 'canvas', 'test.png');
+}, false);
+</script>
+  <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+  
+
+    <script  src="js/index.js"></script>
+
+
+
+
+</body>
+
+</html>
