@@ -1,51 +1,107 @@
-<!DOCTYPE html>
-<html lang="en" >
-
-<head>
-  <meta charset="UTF-8">
-  <title>Simple Camera + Snapshot Demo</title>
-  
-  
-  
-  
-  
-</head>
-
-<body>
-
-  <div class="video-container">
-  <video id="video" width="250" autoplay></video>
-  <canvas id = "canvas"></canvas>
-</div>
-
-<button id="snapshot">Snapshot</button>
-<a id="download">Download</a>
-
-<script>
-function downloadCanvas(link, canvasId, filename) {
-  
-    link.href = document.getElementById(canvasId).toDataURL();
-    link.download = "test.png";
-    console.log(link.href);
-}
-
-/** 
- * The event handler for the link's onclick event. We give THIS as a
- * parameter (=the link element), ID of the canvas and a filename.
-*/
-document.getElementById('download').addEventListener('click', function() {
-    downloadCanvas(this, 'canvas', 'test.png');
-}, false);
-</script>
-  <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-
-  
-
-    <script  src="js/index.js"></script>
 
 
+<html lang="en">
+    <head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <meta http-equiv="X-UA-Compatible" content="ie=edge">
+       <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+       <title>Administració Policial</title>
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+       <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>
+    </head>
+    <body>
+       <section class="hero is-fullheight" style="background-color:#71c7ec">
+          <div class="columns">
+             <div class="column is-half is-offset-one-quarter">
+                <div class="video-container">
+                   <video id="video" width="100%" height="500" autoplay></video>
+                </div>
+             </div>
+          </div>
+          <canvas id = "canvas" width="300" height="300"></canvas>
+          <button id="snapshot">Snapshot</button>
+          <a class="button is-success" id="download">Download</a>
+       </section>
+       <script>
+          $(function(){
+            var video = $('video')[0];
+            var canvas = $('canvas')[0];
+          
+            var getCameraAccess = function(){
+              
+              // Normalize the various vendor prefixed versions of getUserMedia.
+          navigator.getUserMedia = (navigator.getUserMedia ||
+                                    navigator.webkitGetUserMedia ||
+                                    navigator.mozGetUserMedia || 
+                                    navigator.msGetUserMedia);
+          
+          // Check that the browser supports getUserMedia.
+          // If it doesn't show an alert, otherwise continue.
+          if (navigator.getUserMedia) {
+            // Request the camera.
+            navigator.getUserMedia(
+              // Constraints
+              {
+                video: true
+              },
+          
+              // Success Callback
+              function(localMediaStream) {
+                // Get a reference to the video element on the page.
+                var vid = document.getElementById('video');
+                
+                // Create an object URL for the video stream and use this 
+                // to set the video source.
+                vid.src = window.URL.createObjectURL(localMediaStream);
+              },
+          
+              // Error Callback
+              function(err) {
+                // Log the error to the console.
+                console.log('The following error occurred when trying to use getUserMedia: ' + err);
+              }
+            );
+          
+          } else {
+            alert('Sorry, your browser does not support getUserMedia');
+          }
+            };
+          
+            var takeSnapshot = function(){
+                canvas.height = video.videoHeight;
+                canvas.width = video.videoWidth;
+                canvas.getContext('2d').drawImage(video, 0, 0);
+            };
+          
+             // when the start button is clicked, take a snapshot
+            $('#snapshot').on('click', function(){
+                takeSnapshot();
+            });
+          
+            window.onload = function() {
+              getCameraAccess();
+            };
 
+            function downloadCanvas(link, canvasId, filename) {
+              console.log(document.getElementById(canvasId).toDataURL());
+              link.href = document.getElementById(canvasId).toDataURL();
+              link.download = filename;
+              console.log(link.href);
+            }
 
-</body>
+            /** 
+            * The event handler for the link's onclick event. We give THIS as a
+            * parameter (=the link element), ID of the canvas and a filename.
+            */
+            document.getElementById('download').addEventListener('click', function() {
+              downloadCanvas(this, 'canvas', 'matricula.png');
+            }, false);
 
-</html>
+          });
+                      
+       </script>
+    </body>
+ </html>
+ 
+ 

@@ -4902,10 +4902,11 @@ var json = [
 ]
 
 for (var i=0; i<json.length; ++i) {
-  console.log("var circle = L.circle(["+json[i].LAT+", "+json[i].LNG+"], {");
-  console.log("  color: 'red',");
-  console.log("  fillColor: '#f03',");
+  console.log("var circle"+i+" = L.circle(["+json[i].LAT+", "+json[i].LNG+"], {");
+  console.log("  color: '#189ad3',");
+  console.log("  fillColor: '#71c7ec',");
   console.log("  fillOpacity: 0.5,");
-  console.log("  radius: 500");
+  console.log("  radius: 10");
   console.log("}).addTo(mymap);");
+  console.log(" ");
 }
