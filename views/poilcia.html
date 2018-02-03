@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Administració Policial</title>
+</head>
+<body>
+        <div class="video-container">
+            <video id="video" width="100%" height="250" autoplay></video>
+            <canvas id = "canvas"></canvas>
+        </div>
+
+        <button id="snapshot">Snapshot</button>
+        <a id="download">Download</a>
+        
+        <script>
+            $(function(){
+                var video = $('video')[0];
+                var canvas = $('canvas')[0];
+            
+                var getCameraAccess = function(){
+                    //request camera acces 
+                    navigator.webkitGetUserMedia(
+                        {video: true, audio: true}, // Options
+                        function(localMediaStream) { // Success
+                            // create an object URL and assign it to the source of our video element
+                            video.src = window.webkitURL.createObjectURL(localMediaStream);
+                        },
+                        function(err) { // Failure
+                            console.log('getUserMedia failed: Code ' + err.code);
+                        }
+                    );
+                };
+            
+                var takeSnapshot = function(){
+                    canvas.height = video.videoHeight;
+                    canvas.width = video.videoWidth;
+                    canvas.getContext('2d').drawImage(video, 0, 0);
+                };
+              
+                 // when the start button is clicked, take a snapshot
+                $('#snapshot').on('click', function(){
+                    takeSnapshot();
+                });
+            
+                window.onload = function() {
+                  getCameraAccess();
+
+                  function downloadCanvas(link, canvasId, filename) {
+  
+                    link.href = document.getElementById(canvasId).toDataURL();
+                    link.download = filename;
+                    console.log(link.href);
+                }
+
+                /** 
+                * The event handler for the link's onclick event. We give THIS as a
+                * parameter (=the link element), ID of the canvas and a filename.
+                */
+                document.getElementById('download').addEventListener('click', function() {
+                    downloadCanvas(this, 'canvas', 'matricula.png');
+                }, false);  
+
+                };
+            });
+        </script>
+</body>
+</html>
