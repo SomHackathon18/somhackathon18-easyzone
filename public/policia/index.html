@@ -90,7 +90,6 @@
             };
 
             function downloadCanvas(link, canvasId, filename) {
-              socket.emit('image', { src: document.getElementById(canvasId).toDataURL() });
               /*console.log(document.getElementById(canvasId).toDataURL());
               link.href = document.getElementById(canvasId).toDataURL();
               link.download = filename;
@@ -102,7 +101,8 @@
             * parameter (=the link element), ID of the canvas and a filename.
             */
             document.getElementById('download').addEventListener('click', function() {
-              downloadCanvas(this, 'canvas', 'matricula.png');
+              socket.emit('image', { src: document.getElementById(canvasId).toDataURL() });
+              // downloadCanvas(this, 'canvas', 'matricula.png');
             }, false);
 
             socket.on('matricula', function (data) {
