@@ -23,7 +23,7 @@
           <a class="button is-danger" id="snapshot">Fer foto</a>
           <br/>
           <canvas id = "canvas" width="300" height="300"></canvas>
-          <a class="button is-success" id="download">Verificar</a>
+          <a class="button is-success" id="verificar">Verificar</a>
        </section>
 
        <script src="/socket.io/socket.io.js"></script>
@@ -96,14 +96,17 @@
               console.log(link.href);*/
             }
 
+            $( "#verificar" ).click(function() {
+              socket.emit('image', { src: document.getElementById('canvas').toDataURL() });
+            });
+
             /** 
             * The event handler for the link's onclick event. We give THIS as a
             * parameter (=the link element), ID of the canvas and a filename.
             */
-            document.getElementById('download').addEventListener('click', function() {
-              socket.emit('image', { src: document.getElementById(canvasId).toDataURL() });
-              // downloadCanvas(this, 'canvas', 'matricula.png');
-            }, false);
+            /*document.getElementById('verificar').addEventListener('click', function() {
+              downloadCanvas(this, 'canvas', 'matricula.png');
+            }, false);*/
 
             socket.on('matricula', function (data) {
               document.getElementById('matricula').innerHTML = "<h1>"+data.matricula+"</h1><br/><h2>"+data.autoritzat+"</h2>"
