@@ -3,6 +3,20 @@ var MongoClient = require('mongodb').MongoClient;
 var url = 'mongodb://localhost:27017/mataro_mobilitat';
 
 module.exports = {
+    robat: function (matricula, callback) {
+        MongoClient.connect(url, function(err, client) {
+            if (err) {
+                console.log('Unable to connect to the mongoDB server. Error: ', err);
+                callback(err, null);
+            } else {
+                var db = client.db("mataro_mobilitat");
+                db.collection("robats").findOne({matricula: matricula}, function(err, result) {
+                    callback(err, result);
+                    client.close();
+                });
+            }
+        });
+    },
     verificar: function (matricula, callback) {
         MongoClient.connect(url, function(err, client) {
             if (err) {
@@ -104,15 +118,14 @@ module.exports = {
             }
         });
     },
-    autoritzarCarregadescarrega: function (matricula, carrer, callback) {
+    cotxerobat: function (matricula, callback) {
         MongoClient.connect(url, function(err, client) {
             if (err) {
                 console.log('Unable to connect to the mongoDB server. Error: ', err);
                 callback(err, null);
             } else {
                 var db = client.db("mataro_mobilitat");
-                var autoritzacio = { matricula: matricula, carrer: carrer };
-                db.collection("autoritzacioCarregadescarrega").insertOne(autoritzacio, function(err, res) {
+                db.collection("robats").insertOne({ matricula: matricula }, function(err, res) {
                     callback(err, res);
                     client.close();
                 });

@@ -123,7 +123,7 @@ app.post('/solicitar', function(req, res) {
 app.post('/admin/carregadescarrega', function(req, res) {
     var matricula = req.body.matricula;
     var carrer = req.body.carrer;
-    mongo.autoritzarCarregadescarrega(matricula, carrer, function(err, data) {
+    mongo.cotxerobat(matricula, function(err, data) {
         if (err) {
             res.render('admin/carregadescarrega', { message: "Error, torna a intentar" });
         } else {
@@ -150,13 +150,21 @@ io.on('connection', function (socket) {
                 var obj = JSON.parse(data);
                 var matricula = obj.results[0].plate;
                 console.log(matricula);
-                mongo.verificar(matricula, function(err, data) {
+                mongo.robat(matricula, function(err, rob) {
                     if (err) {
                         res.send('Error');
                     } else {
-                        var aut = "Resident de la zona";
-                        if (data === null) aut = "MULTAAAA!!!";
-                        socket.emit('matricula', { matricula: matricula, autoritzat: aut });
+                        mongo.verificar(matricula, function(err, data) {
+                            if (err) {
+                                res.send('Error');
+                            } else if (rob) {
+                                socket.emit('matricula', { matricula: matricula, autoritzat: "Aquest vehícle apareix com a robat" });
+                            } else {
+                                var aut = "Aquest vehícle es d'un resident de la zona";
+                                if (data === null) aut = "Aquest vehícle no te autorització per aparcar aquí";
+                                socket.emit('matricula', { matricula: matricula, autoritzat: aut });
+                            }
+                        });
                     }
                 });
             }
