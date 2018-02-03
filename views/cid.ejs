@@ -58,7 +58,7 @@
 
         </section>
         <footer class="modal-card-foot has-text-centered" style="background-color:#fff; border-top:1px solid #71c7ec">                        
-            <input class="button is-success" type="submit" value="Reservar">          
+            <input class="button is-success" type="submit" id= "reservar" value="Reservar">          
         </footer>
       </div>
     </div>
@@ -79,12 +79,19 @@
   }
 
   function closeModal(){
+    var circle = "circle"+cidId;
+    occupyZone(circle);
     cidId = null;
     modal.className = "modal";
     mapView.style.display = "";
   }
+
+  function occupyZone(circleId){
+    window[circleId].setStyle({fillColor: '#f03',color:'red'});
+    window[circleId]._popup.setContent('<b> Zona ja reservada </b>')
+  }
   
-  document.getElementById("closeModal").addEventListener("click", function(){
+  document.getElementById("reservar").addEventListener("click", function(){
     closeModal();
   });
 
