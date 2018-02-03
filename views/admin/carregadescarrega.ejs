@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" type="image/png" href="media/logo.jpg"/>
+    <title>Zona Blava - Mataro Mobilitat</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>
+</head>
+<body>
+        <section class="hero is-primary is-fullheight" style="background-color:#189ad3">
+                <div class="hero-head">
+                    <nav class="navbar">
+                    <div class="container">
+                        <div class="navbar-brand">
+                        <a class="navbar-item">
+                            <img src="media/logo.jpg" alt="Logo" width="50" height="50">
+                        </a>
+                        <div class="navbar-item">
+                            Mataro Mobilitat    
+                        </div>                        
+                        </div>                      
+                    </div>
+                    </nav>
+                </div>
+                
+                <div class="hero-body">
+                    <div class="container has-text-centered">
+                        <% if (message) { %>
+                            <h2><%= message %></h2>
+                        <% } else { %>
+                        <form action="/admin/carregadescarrega" method="POST">
+                            <div class="field">
+                                <label class="label">Matricula</label>
+                                <div class="control">
+                                    <input class="input" type="text" name="matricula" placeholder="Text input">
+                                </div>
+                            </div>
+                                
+                            <div class="field">
+                                <label class="label">Carrer</label>
+                                <div class="control">
+                                    <input class="input" type="text" name="carrer" placeholder="Text input">
+                                </div>
+                            </div>
+
+                            <br>
+                            <input class="button is-medium is-success" type="submit" value="Autoritzar">
+                        </form>
+                        <% } %>
+                    </div>
+                </div>
+                
+                <div class="hero-foot">
+                    <nav class="tabs">
+                    <div class="container">
+                        <ul>
+                        <li class="is-active"><a>Overview</a></li>
+                        <li><a>Modifiers</a></li>
+                        <li><a>Grid</a></li>
+                        <li><a>Elements</a></li>
+                        <li><a>Components</a></li>
+                        <li><a>Layout</a></li>
+                        </ul>
+                    </div>
+                    </nav>
+                </div>
+            </section>
+</body>
+</html>
