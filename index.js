@@ -21,6 +21,10 @@ app.get('/', function(req, res) {
     res.render('index');
 });
 
+app.get('/cid', function(req, res) {
+    res.render('cid', { message: null });
+});
+
 app.get('/admin', function(req, res) {
     res.render('admin/admin', { message: null });
 });
