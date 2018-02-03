@@ -29,7 +29,17 @@
        <script src="/socket.io/socket.io.js"></script>
        <script>
          var socket = io.connect('http://localhost');
-         
+
+          $( "#verificar" ).click(function() {
+            socket.emit('image', { src: document.getElementById('canvas').toDataURL() });
+          });
+          socket.on('matricula', function (data) {
+            document.getElementById('matricula').innerHTML = "<h1>"+data.matricula+"</h1><br/><h2>"+data.autoritzat+"</h2>"
+          });
+          socket.on('processant', function (data) {
+            document.getElementById('matricula').innerText = "Processant matrícula..."
+          });
+
           $(function(){
             var video = $('video')[0];
             var canvas = $('canvas')[0];
@@ -96,10 +106,6 @@
               console.log(link.href);*/
             }
 
-            $( "#verificar" ).click(function() {
-              socket.emit('image', { src: document.getElementById('canvas').toDataURL() });
-            });
-
             /** 
             * The event handler for the link's onclick event. We give THIS as a
             * parameter (=the link element), ID of the canvas and a filename.
@@ -107,13 +113,6 @@
             /*document.getElementById('verificar').addEventListener('click', function() {
               downloadCanvas(this, 'canvas', 'matricula.png');
             }, false);*/
-
-            socket.on('matricula', function (data) {
-              document.getElementById('matricula').innerHTML = "<h1>"+data.matricula+"</h1><br/><h2>"+data.autoritzat+"</h2>"
-            });
-            socket.on('processant', function (data) {
-              document.getElementById('matricula').innerText = "Processant matrícula..."
-            });
 
           });
                       
