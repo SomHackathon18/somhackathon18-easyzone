@@ -52,7 +52,7 @@ module.exports = {
                 callback(err, null);
             } else {
                 var db = client.db("mataro_mobilitat");
-                var autoritzacio = { dni: dni, matricula: matricula, correu: correu, acceptat: false };
+                var autoritzacio = { dni: dni, matricula: matricula, correu: correu, dataInici: Date.now(), dataFinal: -1, acceptat: false };
                 db.collection("zona_blava").insertOne(autoritzacio, function(err, res) {
                     callback(err, res);
                     client.close();
@@ -82,7 +82,7 @@ module.exports = {
             } else {
                 var db = client.db("mataro_mobilitat");
                 var autoritzacio = { dni: dni, matricula: matricula };
-                db.collection("zona_blava").update(autoritzacio, {$set: {acceptat: true}}, function(err, res) {
+                db.collection("zona_blava").update(autoritzacio, {$set: {acceptat: true, dataFinal: Date.now()}}, function(err, res) {
                     callback(err, res);
                     client.close();
                 });
@@ -97,7 +97,7 @@ module.exports = {
             } else {
                 var db = client.db("mataro_mobilitat");
                 var autoritzacio = { dni: dni, matricula: matricula };
-                db.collection("zona_blava").update(autoritzacio, {$set: {acceptat: false}}, function(err, res) {
+                db.collection("zona_blava").update(autoritzacio, {$set: {acceptat: false, dataFinal: Date.now()}}, function(err, res) {
                     callback(err, res);
                     client.close();
                 });

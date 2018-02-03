@@ -35,6 +35,8 @@
                                     <th>DNI</th>
                                     <th>Matricula</th>
                                     <th>Correu</th>
+                                    <th>Data Inici</th>
+                                    <th>Data Fi</th>
                                     <th>Acceptat</th>
                                     <th>Acció</th>
                                 </tr>
@@ -45,6 +47,14 @@
                                     <td><%= solicituds[i].dni %></td>
                                     <td><%= solicituds[i].matricula %></td>
                                     <td><%= solicituds[i].correu %></td>
+                                    <% var date = new Date(solicituds[i].dataInici) %>
+                                    <td><%= ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear() + ' ' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) %></td>
+                                    <% date = new Date(solicituds[i].dataFinal) %>
+                                    <% if(solicituds[i].dataFinal > 0) { %>
+                                    <td><%= ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear() + ' ' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) %></td>
+                                    <% } else { %>
+                                    <td>En espera</td>
+                                    <% } %>
                                     <% if(solicituds[i].acceptat) { %>
                                         <td>Si</td>
                                     <% } else { %>
@@ -62,6 +72,8 @@
                                         <th>DNI</th>
                                         <th>Matricula</th>
                                         <th>Correu</th>
+                                        <th>Data Inici</th>
+                                        <th>Data Fi</th>
                                         <th>Acceptat</th>
                                         <th>Acció</th>
                                 </tr>

@@ -77,6 +77,7 @@ app.get('/admin/acceptar', function(req, res) {
 });
 
 app.get('/admin/denegar', function(req, res) {
+    var correu = req.param('correu');
     var dni = req.param('dni');
     var matricula = req.param('matricula');
     mongo.denegar(dni, matricula, function(err, data) {
