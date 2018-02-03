@@ -9,12 +9,13 @@
 </head>
 <body>
         <div class="video-container">
-            <video id="video" width="100%" height="250" autoplay></video>
+            <video id="video" width="100%" height="500" autoplay></video>
             <canvas id = "canvas"></canvas>
         </div>
 
         <button id="snapshot">Snapshot</button>
-        <a id="download">Download</a>
+        <button><a id="download">Download</a></button>
+        
         
         <script>
             $(function(){
@@ -53,7 +54,6 @@
   
                     link.href = document.getElementById(canvasId).toDataURL();
                     link.download = filename;
-                    console.log(link.href);
                 }
 
                 /** 
