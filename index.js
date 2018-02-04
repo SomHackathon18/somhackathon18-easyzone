@@ -120,14 +120,13 @@ app.post('/solicitar', function(req, res) {
     });
 });
 
-app.post('/admin/carregadescarrega', function(req, res) {
+app.post('/admin/robatori', function(req, res) {
     var matricula = req.body.matricula;
-    var carrer = req.body.carrer;
     mongo.cotxerobat(matricula, function(err, data) {
         if (err) {
-            res.render('admin/carregadescarrega', { message: "Error, torna a intentar" });
+            res.render('admin/robatori', { message: "Error, torna a intentar" });
         } else {
-            res.render('admin/carregadescarrega', { message: "Has autoritzat correctament" });
+            res.render('admin/robatori', { message: "Has insertat el vehicle correctament" });
         }
     });
 });
