@@ -38,19 +38,25 @@
             <div class="field">
                 <label class="label">Matricula</label>
                 <div class="control">
-                    <input class="input" type="text" name="matricula" placeholder="XXXXXXXXX">
+                    <input class="input" type="text" name="matricula" id="matricula" placeholder="XXXXXXXXX">
                 </div>
             </div>
             <div class="field">
+              <label class="label">Dia</label>
+              <div class="control">
+                  <input class="input" type="date" name="dia" id="dia" placeholder="dd/mm/aa">
+              </div>
+          </div>
+            <div class="field">
                 <label class="label">Hora Inici</label>
                 <div class="control">
-                    <input class="input" type="text" name="horaInici" placeholder="10:00">
+                    <input class="input" type="time" name="horaInici" id="horaInici" placeholder="10:00">
                 </div>
             </div>
             <div class="field">
                 <label class="label">Hora Fi</label>
                 <div class="control">
-                    <input class="input" type="text" name="horaFi" placeholder="12:30">
+                    <input class="input" type="time" name="horaFi" id="horaFi" placeholder="12:30">
                 </div>
             </div>
             <br>
@@ -66,7 +72,10 @@
 
     <div id="map"></div>
 
+    <script src="/socket.io/socket.io.js"></script>
     <script>
+    var socket = io.connect('http://localhost:80');
+
   var cidId = null;
   var modal = document.getElementById("reservaPanel");
   var mapView = document.getElementById("map");
@@ -82,19 +91,32 @@
     cidId = null;
     modal.className = "modal";
     mapView.style.display = "";
+
+    document.getElementById("matricula").value = "";
+    document.getElementById("dia").value = "";
+    document.getElementById("horaInici").value = "";
+    document.getElementById("horaFi").value = "";
   }
 
   function reserveZone(){
     var circle = "circle"+cidId;
     occupyZone(circle);
-    cidId = null;
-    modal.className = "modal";
-    mapView.style.display = "";
+
+    var matriculaValue = document.getElementById("matricula").value;
+    var diaValue = document.getElementById("dia").value;
+    var horaIniciValue = document.getElementById("horaInici").value;
+    var horaFiValue = document.getElementById("horaFi").value;
+
+    socket.emit('reservar', {matricula: matriculaValue, dia: diaValue, horaInici: horaIniciValue, horaFi: horaFiValue, zona: cidId});
+
+    console.log(diaValue);
+
+    closeModal();
   }
 
   function occupyZone(circleId){
     window[circleId].setStyle({fillColor: '#f03',color:'red'});
-    window[circleId]._popup.setContent('<b> Zona ja reservada </b>')
+    //window[circleId]._popup.setContent('<b> Zona ja reservada </b>')
   }
   
   document.getElementById("reservar").addEventListener("click", function(){
@@ -4524,6 +4546,17 @@ var circle489 = L.circle([41.5323769501907, 2.44125440712495], {
 }).addTo(mymap);
 
 circle489.bindPopup("<a class = 'button is-active' href='#' onclick = 'openModal(489);' >Reservar zona</a>");
+
+    //MIrar els ocupeds
+    socket.emit('reserves');
+
+    socket.on('lesReserves', function(zonesReservades) {
+      for (var i = 0; i < zonesReservades.length; i++) {
+        var element = array[index];
+        var circle = "circle"+element.zona;
+        occupyZone(circle);
+      }
+    });
   
     </script>
 
