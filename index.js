@@ -55,7 +55,7 @@ app.get('/admin/acceptar', function(req, res) {
                 from: 'no-reply@easyzone.com',
                 to: correu,
                 subject: 'Resultat acreditació Zona Blava',
-                html: 'Has estat acceptat!',
+                html: 'Benvolgut client, \nHa estat acreditat a la zona blava de Mataró. A partir d’ara podrà gaudir dels beneficis que això comporta. \nAtentament, \nEl equip Easy Zone',
             }, function(err, reply) {
                 res.redirect('/admin/solicituds');
             });
@@ -75,7 +75,7 @@ app.get('/admin/denegar', function(req, res) {
                 from: 'no-reply@easyzone.com',
                 to: correu,
                 subject: 'Resultat acreditació Zona Blava',
-                html: 'Has estat denegat!',
+                html: 'Benvolgut client, \nNo ha esta possible la seva acreditació a la zona blava de Mataró. Comprovi en el següent enllaç que compleix tots els requisits: http://www.mataro.cat/web/portal/ca/Ajuntament/Aciutadana/tramits/detall/zona_blava_acreditacio_per_a_residents_en_zona_blava_36.html \nAtentament, \nEl equip Easy Zone',
             }, function(err, reply) {
                 res.redirect('/admin/solicituds');
             });
