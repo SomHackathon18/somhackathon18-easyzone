@@ -59,6 +59,35 @@ module.exports = {
             }
         });
     },
+    reservar: function (matricula, dia, horaInici, horaFi, zona, callback) {
+        MongoClient.connect(url, function(err, client) {
+            if (err) {
+                console.log('Unable to connect to the mongoDB server. Error: ', err);
+                callback(err, null);
+            } else {
+                var db = client.db("mataro_mobilitat");
+                var insert = { matricula: matricula, horaInici: horaInici, horaFi: horaFi, zona: zona };
+                db.collection("reserves").insertOne(nsert, function(err, res) {
+                    callback(err, res);
+                    client.close();
+                });
+            }
+        });
+    },
+    lesReserves: function (callback) {
+        MongoClient.connect(url, function(err, client) {
+            if (err) {
+                console.log('Unable to connect to the mongoDB server. Error: ', err);
+                callback(err, null);
+            } else {
+                var db = client.db("mataro_mobilitat");
+                db.collection("reserves").find({}).toArray(function(err, result) {
+                    callback(err, result);
+                    client.close();
+                });
+            }
+        });
+    },
     solicitar: function (dni, matricula, correu, callback) {
         MongoClient.connect(url, function(err, client) {
             if (err) {

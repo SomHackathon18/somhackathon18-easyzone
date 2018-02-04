@@ -140,6 +140,19 @@ var path = './';
 var optionalObj = {'fileName': 'matricula', 'type':'png'};
 
 io.on('connection', function (socket) {
+
+    socket.on('reserves', function () {
+        mongo.reserves(function(err, rob) {
+            socket.emit('lesReserves', rob);
+        });
+    });
+
+    socket.on('reservar', function (data) {
+        mongo.robat(reservar, data.matricula, data.dia, data.horaInici, data.horaFi, data.zona, function(err, rob) {
+            // 
+        });
+    });
+
     socket.on('image', function (data) {
         base64ToImage(data.src,path,optionalObj);
         console.log("Processant matricula...");
