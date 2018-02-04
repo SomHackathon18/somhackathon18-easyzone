@@ -4552,7 +4552,7 @@ circle489.bindPopup("<a class = 'button is-active' href='#' onclick = 'openModal
 
     socket.on('lesReserves', function(zonesReservades) {
       for (var i = 0; i < zonesReservades.length; i++) {
-        var element = array[index];
+        var element = zonesReservades[i];
         var circle = "circle"+element.zona;
         occupyZone(circle);
       }

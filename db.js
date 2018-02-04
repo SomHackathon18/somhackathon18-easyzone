@@ -67,14 +67,14 @@ module.exports = {
             } else {
                 var db = client.db("mataro_mobilitat");
                 var insert = { matricula: matricula, horaInici: horaInici, horaFi: horaFi, zona: zona };
-                db.collection("reserves").insertOne(nsert, function(err, res) {
+                db.collection("reserves").insertOne(insert, function(err, res) {
                     callback(err, res);
                     client.close();
                 });
             }
         });
     },
-    lesReserves: function (callback) {
+    reserves: function (callback) {
         MongoClient.connect(url, function(err, client) {
             if (err) {
                 console.log('Unable to connect to the mongoDB server. Error: ', err);

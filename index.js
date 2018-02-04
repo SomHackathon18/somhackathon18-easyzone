@@ -87,8 +87,8 @@ app.get('/admin/zonesprivades', function(req, res) {
     res.render('admin/zonesprivades', { message: null });
 });
 
-app.get('/admin/carregadescarrega', function(req, res) {
-    res.render('admin/carregadescarrega', { message: null });
+app.get('/admin/robatori', function(req, res) {
+    res.render('admin/robatori', { message: null });
 });
 
 app.post('/solicitar', function(req, res) {
@@ -148,7 +148,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('reservar', function (data) {
-        mongo.robat(reservar, data.matricula, data.dia, data.horaInici, data.horaFi, data.zona, function(err, rob) {
+        mongo.reservar(data.matricula, data.dia, data.horaInici, data.horaFi, data.zona, function(err, rob) {
             // 
         });
     });
