@@ -6,8 +6,6 @@ Projecte realitzat a la hackathon del Tecnocampus 2018.
 
 Encoratjem a TOT ajuntament a usar aquest software per tal de millorar l'orgnització de Zones Blaves i de Carrega i Descarrega. També tot pull request és benvingut i qualsevol problema es pot postejar a l'apartat de 'Issues'.
 
-Es pot veure en funcionament la part del client en el següent [enllaç](http://www.easyzone.ga/).
-
 ## Com usar l'aplicació
 
 Primer de tot hem de descarregar els arxius del projecte, ho podem fer amb la següent línea:
